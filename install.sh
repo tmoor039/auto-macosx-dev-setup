@@ -69,7 +69,7 @@ if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
 
   set -eE
   
-  if !is_no_colors; then
+  if is_no_colors; then
     unset_colors
   else
     set_colors
@@ -121,4 +121,6 @@ if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
   config_iterm_scroll_with_mouse
   install_openshift_zsh_plugin
   create_minishift_zsh_completion
+  link_dotfiles_to_home
+
 fi
