@@ -29,46 +29,23 @@ touch "${LOG_FILE}"
 # SOURCING LIB FUNCTIONS
 ##################################################################
 
+# import colorize and verbose utility functions
 # shellcheck source=utils/colors.sh
 source "${BASEDIR}"/utils/colors.sh
+# import dependencies check functions
 # shellcheck source=utils/dependencies.sh
 source "${BASEDIR}"/utils/dependencies.sh
+# import pre-installation step's funcions
+# shellcheck source=utils/pre-install.sh
+source "${BASEDIR}"/utils/pre-install.sh
+# import post-installation step's funcions
 # shellcheck source=utils/post-install.sh
 source "${BASEDIR}"/utils/post-install.sh
+
 
 ##################################################################
 # UTILITY FUNCTIONS
 ##################################################################
-
-install_xcode_command_line_tools(){
-  touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress;
-  PROD=$(softwareupdate -l |
-    grep "\*.*Command Line" |
-    head -n 1 | awk -F"*" '{print $2}' |
-    sed -e 's/^ *//' |
-    tr -d '\n')
-  softwareupdate -i "$PROD" --verbose;
-} 
-
-install_pip(){
-  debug
-  sudo easy_install pip
-}
-
-install_ansible(){
-  debug
-  sudo pip install ansible --quiet
-}
-
-ansible_playbook_setup_environment(){
-  debug
-  ansible-playbook $ANSIBLE_PLAYBOOK 
-}
-
-is_xcode_cli_tools_installed(){
-  debug
-  command -v /usr/bin/xcode-select 
-}
 
 err_cleanup(){
   debug
@@ -80,6 +57,10 @@ exit_cleanup(){
   info "Cleanup"
 }
 
+##################################################################
+# UTILITY FUNCTIONS
+##################################################################
+
 if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
   SECONDS=0
 
@@ -88,37 +69,56 @@ if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
 
   set -eE
   
+  if !is_no_colors; then
+    unset_colors
+  else
+    set_colors
+  fi
+  
   separator
   bump_step "SETUP MAC OSX DEVELOPMENT SCRIPT"
   separator
 
-  bump_step "Install xcode cli tools"
+  info
+  info
+
+  separator
+  bump_step "Running pre-install steps"
   separator
 
+  bump_step "Install xcode cli tools"
+  separator
   if ! is_xcode_cli_tools_installed; then
     install_xcode_command_line_tools
+  else
+    info "xcode cli tools already installed"
   fi
 
   bump_step "Install pip"
   separator
-
   install_pip
 
-  separator
   bump_step "Install ansible"
   separator
-
   install_ansible
 
+  info "Pre-install steps execution finished"
+  info
+  
   separator
-  bump_step "Running playbook"
+  bump_step "Running brew ansible playbook"
   separator
-
   ansible_playbook_setup_environment
 
+  info "Playbook execution finished"
+  info
+
   separator
-  bump_step "Configuring"
+  bump_step "Post install configuration"
   separator
 
+  change_docker_machine_driver_permission
   config_iterm_scroll_with_mouse
+  install_openshift_zsh_plugin
+  create_minishift_zsh_completion
 fi

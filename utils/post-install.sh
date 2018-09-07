@@ -23,3 +23,8 @@ install_openshift_zsh_plugin(){
   git clone https://github.com/chmouel/oh-my-zsh-openshift ~/.oh-my-zsh/custom/plugins/oc
 }
 
+create_minishift_zsh_completion_file(){
+  debug
+  info "Creating minishift zsh completion configuration file"
+  minishift completion zsh > ~/.minishift-completion
+}
