@@ -31,7 +31,7 @@ create_minishift_zsh_completion_file(){
 
 link_dotfiles_to_home(){
   debug
-  ln -s ./dotfiles/.vimrc ~/.vimrc
-  ln -s ./dotfiles/.zhsrc ~/.zshrc
-  ln -s ./dotfiles/.cowzen.py ~/.cowzen.py
+  ln -s ./dotfiles/vimrc ~/.vimrc
+  ln -s ./dotfiles/zhsrc ~/.zshrc
+  ln -s ./dotfiles/cowzen.py ~/.cowzen.py
 }

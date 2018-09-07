@@ -122,5 +122,4 @@ if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
   install_openshift_zsh_plugin
   create_minishift_zsh_completion
   link_dotfiles_to_home
-
 fi

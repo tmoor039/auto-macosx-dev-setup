@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC1117
 
 install_xcode_command_line_tools(){
   touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress;
@@ -15,14 +16,24 @@ install_pip(){
   sudo easy_install pip
 }
 
+is_pip_installed(){
+  debug
+  command -v /usr/local/bin/pip
+}
+
 install_ansible(){
   debug
   sudo pip install ansible --quiet
 }
 
+is_ansible_installed(){
+  debug
+  command -v /usr/local/bin/ansible
+}
+
 ansible_playbook_setup_environment(){
   debug
-  ansible-playbook $ANSIBLE_PLAYBOOK 
+  ansible-playbook "$ANSIBLE_PLAYBOOK" 
 }
 
 is_xcode_cli_tools_installed(){
