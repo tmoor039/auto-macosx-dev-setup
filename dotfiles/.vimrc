@@ -173,6 +173,7 @@ call vundle#begin()
   Plugin 'wincent/command-t'
   Plugin 'Townk/vim-autoclose'
   Plugin 'mileszs/ack.vim'
+  Plugin 'vim-syntastic/syntastic' 
 call vundle#end()
 
 function! NumberToggle()
@@ -213,11 +214,25 @@ let g:scratch_height = 0.50
 let g:scratch_filetype = 'markdown'
 
 " ~/.vim/ftplugin/sh.vim
-function! ShellCheck()
-  set makeprg=shellcheck\ -x\ -f\ gcc\ %
-  au BufWritePost * :silent make | redraw!
-  au QuickFixCmdPost [^l]* nested cwindow
-  au QuickFixCmdPost    l* nested lwindow
-endfunction
+" function! ShellCheck()
+"  set makeprg=shellcheck\ -x\ -f\ gcc\ %
+" endfunction
 
-nnoremap <C-i> :call ShellCheck()<cr>
+" au BufWritePost * :silent make | redraw!
+" au QuickFixCmdPost [^l]* nested cwindow
+" au QuickFixCmdPost    l* nested lwindow
+
+" nnoremap <C-i> :call ShellCheck()<cr>
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+let g:syntastic_loc_list_height = 5 " syntax info window is 5 rows height
+
+let g:loaded_syntastic_zsh_shellcheck_checker = 1
+
