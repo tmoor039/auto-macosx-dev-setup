@@ -53,6 +53,7 @@
       - 'zsh'
       - 'zsh-syntax-highlighting'
       - 'docker-machine-driver-xhyve'
+      - 'watch'
     install_homebrew_if_missing: true
     python_modules:
       - 'configparser'
