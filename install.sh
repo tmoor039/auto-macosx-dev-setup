@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC1091
 #/ Description:
 #/  Setup mac osx devops environment
 #/ Usage:
@@ -12,7 +13,12 @@
 usage() { grep '^#/' "$0" | cut -c4- ; exit 0 ; }
 expr "$*" : ".*--help" > /dev/null && usage
 
-ANSIBLE_PLAYBOOK=install-macos-pkg.yml
+export ANSIBLE_PLAYBOOK=install-macos-pkgs.yml
+export ANSIBLE_NOCOWS=1
+export ANSIBLE_RETRY_FILES_ENABLED=false
+
+POST_INSTALL=${POST_INSTALL:-"true"}
+
 BASEDIR=$PWD
 
 ##################################################################
@@ -30,7 +36,7 @@ touch "${LOG_FILE}"
 ##################################################################
 
 # import colorize and verbose utility functions
-# shellcheck source=utils/colors.sh
+# shellcheck source=/utils/colors.sh
 source "${BASEDIR}"/utils/colors.sh
 # import dependencies check functions
 # shellcheck source=utils/dependencies.sh
@@ -55,6 +61,10 @@ err_cleanup(){
 exit_cleanup(){
   debug
   info "Cleanup"
+}
+
+is_post_install(){
+  [[ "${POST_INSTALL}" == "true" ]]
 }
 
 ##################################################################
@@ -113,13 +123,16 @@ if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
   info "Playbook execution finished"
   info
 
-  separator
-  bump_step "Post install configuration"
-  separator
+  if is_post_install; then
+    separator
+    bump_step "Post install configuration"
+    separato
 
-  change_docker_machine_driver_permission
-  config_iterm_scroll_with_mouse
-  install_openshift_zsh_plugin
-  create_minishift_zsh_completion
-  link_dotfiles_to_home
+    change_docker_machine_driver_permission
+    config_iterm_scroll_with_mouse
+    install_openshift_zsh_plugin
+    create_minishift_zsh_completion
+    link_dotfiles_to_home
+    setup_vagrant_box_with_guest_additions
+  fi
 fi

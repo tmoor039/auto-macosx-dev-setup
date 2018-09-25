@@ -35,3 +35,15 @@ link_dotfiles_to_home(){
   ln -s ./dotfiles/zhsrc ~/.zshrc
   ln -s ./dotfiles/cowzen.py ~/.cowzen.py
 }
+
+setup_vagrant_box_with_guest_additions(){
+  debug
+  ORIGIN="${PWD}"
+  mkdir -p "${HOME}/vagrantbox"
+  
+  cd "${HOME}/vagrantbox" || exit
+  vagrant init centos/7
+  vagrant plugin install vagrant-vbguest
+  vagrant up
+  cd "${ORIGIN}" || exit
+}
