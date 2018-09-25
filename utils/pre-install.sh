@@ -33,7 +33,7 @@ is_ansible_installed(){
 
 ansible_playbook_setup_environment(){
   debug
-  ansible-playbook "$ANSIBLE_PLAYBOOK" 
+  ansible-playbook "$ANSIBLE_PLAYBOOK" -vv 
 }
 
 is_xcode_cli_tools_installed(){
