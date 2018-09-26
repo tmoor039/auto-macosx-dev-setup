@@ -27,6 +27,7 @@
       - 'minishift'
       - 'google-cloud-sdk'
     brew_packages:
+      - 'coreutils'
       - 'connect'
       - 'autoconf'
       - 'bash-completion'
